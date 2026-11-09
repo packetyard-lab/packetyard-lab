@@ -28,6 +28,7 @@ It's made for network training. Nothing to install and no server to run: open th
 - **Device views:** a **Desktop** for PCs and laptops (IP Configuration, Command Prompt, Web Browser, Wi-Fi), a **Command line**, a **Physical** front-panel view with live link and activity lights, and a **Learn** card explaining each device.
 - **Device model selection:** when adding a device, pick a model from the list next to the device buttons, for example Cisco ISR 4331, Catalyst 9200, FortiGate 60F, Cisco ASA 5506-X, Aruba AP, Windows Server 2022 or Synology NAS. You can also change it later in the device panel. For firewalls the model chooses the CLI style: FortiGate models use a FortiOS-style CLI with `port1`–`port4`, and ASA models use an ASA-style CLI.
 - **Windows-style servers:** add server roles (DHCP, DNS, IIS web, file sharing) and configure them with PowerShell cmdlets. There's also a **Config files** view showing the same setup as Linux files (dhcpd.conf, BIND zone, nginx, smb.conf, squid.conf).
+- **Choose the port:** with the Cable tool, tap a device to see all its ports (free or in use, and what they connect to), pick one, then pick the port on the other device. Works for routers, switches, firewalls, access points (wired uplink or Wi-Fi radios) and hosts. Untick **Pick ports** to let the app choose.
 - **Cable types:** copper straight-through and crossover (with T568A/B wiring), multimode and single-mode fiber, serial WAN, coax and Wi-Fi, each with a connector illustration, speed and distance.
 
 ## Protocols and features simulated
@@ -191,7 +192,7 @@ Pick a FortiGate model. Then use `config system interface`, `config firewall add
 | ASA-style firewall | interface: `nameif <inside\|outside\|dmz>`; config: `access-list <NAME> extended permit tcp any host <ip> eq 80`, `access-group <NAME> in interface outside`, `route <nameif> <net> <mask> <gw>`, `object network <name>` then `host <ip>` and `nat (dmz,outside) static <public-ip>`; `show xlate`, `show nameif`, `show route` |
 | SD-WAN edge | interface: `sdwan transport <mpls\|internet>`; config: `sdwan peer <name> <lan-net> <mask> <mpls-ip> <internet-ip>`, `sdwan policy <voice\|web\|default> <prefer-mpls\|prefer-internet\|best-latency>`; `show sdwan tunnels`, `show sdwan policy` |
 
-Common shortcuts work, for example `conf t`, `sh ip int br` and `int g0/1`. Type `?` in any mode for help. `end` or `Ctrl+Z` returns to privileged mode.
+Common shortcuts work, for example `conf t`, `sh ip int br` and `int g0/1`. Press **Tab** to complete a command or interface name (press again to list the choices), and type **`?`** at any point to see what can come next, just like on real equipment. Tab works on PCs, servers (including PowerShell cmdlets) and FortiGate-style firewalls too; on phones use the **Tab** and **?** buttons next to the input. `end` or `Ctrl+Z` returns to privileged mode.
 
 ## Running locally
 
@@ -223,7 +224,6 @@ Then open http://localhost:8000 in your browser.
 - TCP is simplified: one request and one response per connection, no windowing or congestion control.
 - SD-WAN tunnels are shown decrypted in the inspector so you can see the inner packet.
 - Traceroute sends one probe per hop instead of three.
-- There's no Tab completion in the CLI yet.
 - STP is classic 802.1D on VLAN 1 (no Rapid STP or per-VLAN instances). VPN uses pre-shared keys only.
 - FortiOS and ASA CLIs cover the common commands for the labs, not the full products.
 - Labs are saved per browser. Use **Save / load** to move a lab between machines.

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Pj643J+szo3R2ZH1KUO4R6AUo0mZqwuElKDWuMJDy80='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-kTysXVmJ4x1/kXag/VTMF52AUpk5OA0zrXlWMCT66QU='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'; manifest-src 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="description" content="Packetyard: a browser-based network lab for learning protocols.">
 <style>body{margin:0}img{max-width:100%}</style>
@@ -354,9 +354,59 @@ button.brand{border:0;background:none;padding:0;cursor:pointer;color:inherit;fon
 .wpath li button:hover{border-color:var(--accent)}
 .wpath li em{font:500 10.5px var(--mono);font-style:normal;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 7px;flex:none}
 .wfoot{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:12px}
-@media (max-width:760px){.wbox{padding:16px 14px 14px;border-radius:14px;max-height:none}.welcome{place-items:start center}.wnet{width:100%}}
+
+/* start screen: always fits the window */
+.welcome{overflow:hidden;padding:clamp(8px,2vh,16px)}
+.wbox{display:grid;grid-template-rows:auto auto auto minmax(0,1fr) auto;gap:clamp(8px,1.6vh,16px);overflow:hidden;max-height:calc(100dvh - 2*clamp(8px,2vh,16px));padding:clamp(12px,2.2vh,22px) clamp(14px,2vw,24px) clamp(10px,1.6vh,18px)}
+.whero{gap:clamp(2px,.6vh,6px);padding:0}
+.wnet{width:auto;max-width:100%;height:clamp(44px,14vh,150px)}
+.whero h1{font-size:clamp(24px,4.6vh,40px)}
+.wtag{font-size:clamp(12.5px,1.8vh,15px)}
+.wq{padding:clamp(8px,1.3vh,12px) 14px}
+.wpaths{min-height:0;grid-template-columns:repeat(3,minmax(0,1fr))}
+.wpath{min-height:0;overflow:hidden;padding:clamp(10px,1.5vh,14px)}
+.wpath ul{flex:1 1 auto;min-height:0;overflow:auto;padding-right:2px;overscroll-behavior:contain}
+.wpath li button{padding:clamp(6px,.9vh,8px) 10px}
+.wtabs{display:none}
+.wfoot{padding-top:clamp(6px,1.2vh,12px)}
+@media (max-height:720px){.wtag{display:none}.wpath p{display:none}.wq span{display:none}}
+@media (max-height:520px){.wnet{display:none}.whero{background:none}.whero h1{font-size:22px}}
+.wpath ul.more{-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 36px),transparent)}
+@media (max-width:760px){
+  .welcome{place-items:center}
+  .wbox{max-height:calc(100dvh - 16px);border-radius:14px}
+  .wnet{height:clamp(40px,9vh,90px)}
+  .wquick{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .wq{flex-direction:column;align-items:flex-start;gap:6px;padding:10px}
+  .wq svg{width:22px;height:22px}.wq b{font-size:13.5px;line-height:1.2}.wq span{display:none}
+  .wtabs{display:flex;gap:4px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--canvas)}
+  .wtabs button{flex:1;border:0;background:none;border-radius:7px;padding:8px 4px;font:600 12.5px var(--ui);color:var(--muted);cursor:pointer}
+  .wtabs button[aria-selected="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+  .wh2{display:none}
+  .wpaths{grid-template-columns:minmax(0,1fr)}
+  .wpath:not(.on){display:none}
+  .wpath header{display:none}
+  .wfoot .note{display:none}
+}
+
 @media (prefers-reduced-motion:reduce){.wbox,.wpath{animation:none}.wq{transition:none}}
 .barscroll{display:contents}
+.tkey{flex:none;border:1px solid color-mix(in srgb,var(--term-fg) 35%,transparent);background:transparent;color:var(--term-fg);border-radius:6px;font:600 11.5px var(--mono);padding:3px 8px;margin-left:6px;cursor:pointer;opacity:.85}
+.tkey:hover{opacity:1}
+.portpick{position:fixed;z-index:31;width:300px;max-width:calc(100vw - 16px);max-height:min(70vh,520px);display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+.pp-h{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line)}
+.pp-h b{display:block;font-size:14px}.pp-h .note{font-size:12px}
+.pp-h .btn{border:1px solid var(--line)}
+.pp-list{overflow:auto;padding:8px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.pp-list button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;border:1px solid var(--line);background:var(--canvas);color:var(--ink);border-radius:8px;padding:7px 9px;cursor:pointer;font:inherit;min-height:44px}
+.pp-list button b{font:600 13px var(--mono)}
+.pp-list button span{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.pp-list button:hover:not(:disabled){border-color:var(--accent)}
+.pp-list button.auto{grid-column:1/-1;background:var(--accent-soft)}
+.pp-list button.free b::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:6px;vertical-align:1px}
+.pp-list button:disabled{opacity:.55;cursor:not-allowed}
+.pp-list button:disabled b::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--mute);margin-right:6px;vertical-align:1px}
+@media (max-width:760px){.portpick{left:8px!important;right:8px;top:auto!important;bottom:calc(8px + env(safe-area-inset-bottom,0px));width:auto;max-width:none;max-height:55vh}}
 .donate{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;background:#ffdd00;color:#1a1a1a;font-weight:600;font-size:13.5px;text-decoration:none;border:1px solid #e6c700}
 .donate:hover{background:#ffe433}.donate:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .note .donate{padding:3px 10px;font-size:12.5px}
@@ -423,6 +473,7 @@ button.brand{border:0;background:none;padding:0;cursor:pointer;color:inherit;fon
       <button class="btn" data-tool="select" aria-pressed="true" title="Select and move (V)"><svg viewBox="0 0 16 16"><path d="M3 2l9 5-4 1.2L6.5 12z" fill="currentColor"/></svg><span class="lbl">Select</span></button>
       <button class="btn" data-tool="link" title="Connect two devices with a cable (L)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="3.5" cy="12.5" r="1.8"/><circle cx="12.5" cy="3.5" r="1.8"/><path d="M5 11l6-6"/></svg><span class="lbl">Cable</span></button>
       <select class="sel" id="cableSel" aria-label="Cable type" title="Cable type for new connections"><option value="auto">Auto cable</option><option value="straight">Copper straight</option><option value="cross">Copper crossover</option><option value="fiber_mm">Fiber multimode</option><option value="fiber_sm">Fiber single-mode</option><option value="serial">Serial WAN</option><option value="coax">Coax</option></select>
+      <label class="chk" title="Choose which port each end of the cable plugs into"><input type="checkbox" id="portAsk"> Pick ports</label>
       <button class="btn" data-tool="delete" title="Delete device or cable"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.7 9h5.6l.7-9"/></svg><span class="lbl">Delete</span></button>
     </div>
     <div class="grp" aria-label="Simulation">
@@ -529,10 +580,14 @@ button.brand{border:0;background:none;padding:0;cursor:pointer;color:inherit;fon
       <p class="wtag">Build a network, configure real devices, and watch every packet travel — with a plain-language explanation of each step.</p>
     </div>
     <div class="wquick" id="wQuick"></div>
-    <h2 class="wh2">Choose your path</h2>
+    <div class="wmid"><h2 class="wh2">Choose your path</h2><div class="wtabs" id="wTabs" role="tablist" aria-label="Learning path"></div></div>
     <div class="wpaths" id="wPaths"></div>
     <div class="wfoot"><label class="chk"><input type="checkbox" id="wShow"> Show this screen when the app opens</label><a class="donate" data-donate hidden target="_blank" rel="noopener noreferrer">☕ Buy me a coffee</a><span class="note">Reopen it any time by tapping the Packetyard name.</span></div>
   </div>
+</div>
+<div class="portpick" id="portPick" hidden role="dialog" aria-labelledby="ppT">
+  <div class="pp-h"><div><b id="ppT"></b><span class="note" id="ppS"></span></div><button class="btn" id="ppX" aria-label="Cancel">Cancel</button></div>
+  <div class="pp-list" id="ppL"></div>
 </div>
 <div class="toast" id="toast" hidden></div>
 <button id="jumpBtn" hidden></button>
@@ -3011,9 +3066,9 @@ $('#resetBtn').onclick=()=>{resetTables();toast('Cleared packets, caches, tables
 
 /* ---------- tools & pointer ---------- */
 const TOUCH=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);const tapWords=x=>TOUCH?x.replace(/\bClick\b/g,'Tap').replace(/\bclick\b/g,'tap').replace(/Drag devices to move them/,'Drag devices to move them, pinch to zoom, drag empty space to pan'):x;
-const HINTS={select:'Drag devices to move them. Click a device to open its console, a cable to change it, a packet to inspect it.',link:'Click a device, then another, to connect them. Pick the cable type in the menu next to Cable; Auto chooses the usual one.',delete:'Click a device or a cable to remove it.'};
+const HINTS={select:'Drag devices to move them. Click a device to open its console, a cable to change it, a packet to inspect it.',link:'Click a device, choose its port, then click the other device and choose its port. Untick Pick ports to let the app choose. Pick the cable type in the menu next to Cable; Auto chooses the usual one.',delete:'Click a device or a cable to remove it.'};
 $('#palette').innerHTML=Object.entries(TYPES).map(([k,v])=>`<button class="pbtn" data-add="${k}" title="Add ${v.name}"><i style="background:var(${TCOL[k]})"></i>${v.name}</button>`).join('');
-function setTool(t){tool=t;linkFrom=null;$$('[data-tool]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tool===t));$$('[data-add]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.add===t));$('#hint').textContent=tapWords(HINTS[t]||`Click the canvas to place a ${TYPES[t].name}.`);svg.classList.toggle('mode-delete',t==='delete');topoDirty=true;const ms=$('#modelSel');if(TYPES[t]){ms.hidden=false;ms.innerHTML=(CATALOG[t]||[]).map(m=>`<option>${esc(m)}</option>`).join('');const last=store.get('packetyard.model.'+t);if(last&&(CATALOG[t]||[]).includes(last))ms.value=last;$('#hint').textContent=tapWords(`Pick a model, then click the canvas to place a ${TYPES[t].name}.`)}else ms.hidden=true}
+function setTool(t){tool=t;linkFrom=null;linkFromIf=null;if(typeof closePortPick==='function')closePortPick();$$('[data-tool]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tool===t));$$('[data-add]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.add===t));$('#hint').textContent=tapWords(HINTS[t]||`Click the canvas to place a ${TYPES[t].name}.`);svg.classList.toggle('mode-delete',t==='delete');topoDirty=true;const ms=$('#modelSel');if(TYPES[t]){ms.hidden=false;ms.innerHTML=(CATALOG[t]||[]).map(m=>`<option>${esc(m)}</option>`).join('');const last=store.get('packetyard.model.'+t);if(last&&(CATALOG[t]||[]).includes(last))ms.value=last;$('#hint').textContent=tapWords(`Pick a model, then click the canvas to place a ${TYPES[t].name}.`)}else ms.hidden=true}
 $$('[data-tool]').forEach(b=>b.onclick=()=>setTool(b.dataset.tool));
 $('#cableSel').onchange=e=>{cableChoice=e.target.value;setTool('link')};
 $$('[data-add]').forEach(b=>b.onclick=()=>setTool(b.dataset.add));
@@ -3052,10 +3107,9 @@ svg.addEventListener('pointerdown',e=>{
     else{pan={w:pt,sx:e.clientX,sy:e.clientY,moved:false};try{svg.setPointerCapture(e.pointerId)}catch(_){}}
     return}
   if(TYPES[tool]){if(!d){autoFit=false;const nd=addDev(tool,Math.round(pt.x),Math.round(pt.y));const mv=$('#modelSel').value;store.set('packetyard.model.'+tool,mv);if(mv&&!/^Generic/.test(mv))nd.model=mv;if(nd.type==='firewall'&&platformFor(mv)==='fortios')setPlatform(nd,'fortios');save();selId=nd.id;selLink=null;setTool('select');renderDevicePane()}return}
-  if(tool==='link'){if(!d)return;if(!linkFrom){linkFrom=d.id;topoDirty=true;return}
-    if(linkFrom===d.id){linkFrom=null;topoDirty=true;return}
-    const a=dev(linkFrom);if(S.links.some(l=>(l.a.dev===a.id&&l.b.dev===d.id)||(l.b.dev===a.id&&l.a.dev===d.id))){toast('These two devices are already connected.');linkFrom=null;topoDirty=true;return}
-    const l=connect(a,d);linkFrom=null;topoDirty=true;if(l)toast(`Cabled ${a.name} ${a.ifaces[l.a.ifi].name} ↔ ${d.name} ${d.ifaces[l.b.ifi].name}`);return}
+  if(tool==='link'){if(!d)return;if(linkFrom===d.id){linkFrom=null;closePortPick();topoDirty=true;return}
+    if(portAsk)return openPortPick(d,e.clientX,e.clientY);
+    linkEnd(d,null);return}
   if(tool==='delete'){if(d)removeDev(d);else if(li){const l=linkById(li.dataset.link);if(l)removeLink(l)}renderDevicePane();return}
 });
 svg.addEventListener('pointermove',e=>{if(!drag)return;const pt=svgPt(e);const nx=Math.max(30,Math.min(W-30,pt.x-drag.dx)),ny=Math.max(30,Math.min(H-40,pt.y-drag.dy));if(Math.abs(nx-drag.d.x)+Math.abs(ny-drag.d.y)>1)drag.moved=true;drag.d.x=nx;drag.d.y=ny;topoDirty=true});
@@ -3101,14 +3155,18 @@ function openWelcome(){const w=$('#welcome'),cur=store.get('packetyard.current')
   $('#wQuick').innerHTML=(n?`<button class="wq main" data-w="continue">${ic.go}<div><b>Continue</b><span>${cur?esc(cur)+' · ':''}${n} device${n===1?'':'s'} on the canvas</span></div></button>`:'')+
     `<button class="wq${n?'':' main'}" data-w="scratch">${ic.plus}<div><b>Start from scratch</b><span>Empty canvas: add devices, cable them, configure</span></div></button>`+
     `<button class="wq" data-w="library">${ic.grid}<div><b>Browse everything</b><span>${Object.keys(SCENARIOS).length} setups · ${Object.keys(DEMOS).length} demos · ${Object.keys(LABS).length} labs</span></div></button>`;
-  $('#wPaths').innerHTML=WPATHS.map(P=>`<section class="wpath"><header><span class="wlvl ${P.lvl}">${P.tag}</span></header><h3>${P.title}</h3><p>${P.desc}</p><ul>${P.items.filter(([kd,k])=>itemOf(kd,k)).map(([kd,k])=>`<li><button data-wk="${kd}" data-wi="${k}"><span>${esc(itemOf(kd,k).title)}</span><em>${KINDN[kd]}</em></button></li>`).join('')}</ul></section>`).join('');
+  const cur0=+(store.get('packetyard.wtab')||0)||0;$('#wTabs').innerHTML=WPATHS.map((P,i)=>`<button role="tab" data-wt="${i}" aria-selected="${i===cur0}">${P.tag}</button>`).join('');
+  $('#wPaths').innerHTML=WPATHS.map((P,i)=>`<section class="wpath${i===cur0?' on':''}"><header><span class="wlvl ${P.lvl}">${P.tag}</span></header><h3>${P.title}</h3><p>${P.desc}</p><ul>${P.items.filter(([kd,k])=>itemOf(kd,k)).map(([kd,k])=>`<li><button data-wk="${kd}" data-wi="${k}"><span>${esc(itemOf(kd,k).title)}</span><em>${KINDN[kd]}</em></button></li>`).join('')}</ul></section>`).join('');
   $('#wShow').checked=store.get('packetyard.welcome')!=='off';
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)w.querySelectorAll('animateMotion').forEach(a=>a.remove());
-  w.hidden=false;setTimeout(()=>{const f=w.querySelector('.wbox');if(f)f.focus({preventScroll:true})},50)}
+  w.hidden=false;requestAnimationFrame(wMore);setTimeout(()=>{const f=w.querySelector('.wbox');if(f)f.focus({preventScroll:true})},50)}
 function closeWelcome(){$('#welcome').hidden=true}
 $('#welcome').addEventListener('click',e=>{const b=e.target.closest('[data-w],[data-wk]');if(!b){if(e.target.id==='welcome')closeWelcome();return}
   if(b.dataset.wk){closeWelcome();startItem(b.dataset.wk,b.dataset.wi);return}
   const a=b.dataset.w;closeWelcome();if(a==='scratch')$('#newBtn').onclick();else if(a==='library')$('#libBtn').click()});
+function wMore(){$$('#wPaths ul').forEach(u=>u.classList.toggle('more',u.scrollHeight-u.clientHeight-u.scrollTop>4))}
+$('#wPaths').addEventListener('scroll',wMore,true);addEventListener('resize',()=>{if(!$('#welcome').hidden)wMore()});
+$('#wTabs').onclick=e=>{const b=e.target.closest('[data-wt]');if(!b)return;const i=+b.dataset.wt;store.set('packetyard.wtab',String(i));$$('#wTabs [data-wt]').forEach(x=>x.setAttribute('aria-selected',x===b));$$('#wPaths .wpath').forEach((x,j)=>x.classList.toggle('on',j===i));wMore()};
 $('#wShow').onchange=e=>store.set('packetyard.welcome',e.target.checked?'on':'off');
 $('#brandBtn').onclick=openWelcome;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#welcome').hidden)closeWelcome()});
@@ -3150,6 +3208,28 @@ $('#bgFit').onchange=e=>{if(S.bg){S.bg.fit=e.target.value;setBg(S.bg)}};
   try{const x=new URL(u);const ok=x.protocol==='https:'&&/(^|\.)(buymeacoffee\.com|ko-fi\.com|github\.com|paypal\.me|paypal\.com|patreon\.com|liberapay\.com)$/i.test(x.hostname);u=ok?x.href:''}catch(e){u=''}
   if(!u)return;document.querySelectorAll('[data-donate]').forEach(a=>{a.href=u;a.hidden=false});document.querySelectorAll('[data-donate-wrap]').forEach(w=>w.hidden=false);
   const lbl=/ko-fi/i.test(u)?'☕ Support on Ko-fi':/github\.com\/sponsors/i.test(u)?'♥ Sponsor':/patreon/i.test(u)?'♥ Support on Patreon':/paypal/i.test(u)?'☕ Donate':'☕ Buy me a coffee';document.querySelectorAll('[data-donate]').forEach(a=>a.textContent=lbl)})();
+/* ---------- cable port picker ---------- */
+let portAsk=store.get('packetyard.portAsk')!=='off',linkFromIf=null;
+$('#portAsk').checked=portAsk;$('#portAsk').onchange=e=>{portAsk=e.target.checked;store.set('packetyard.portAsk',portAsk?'on':'off');closePortPick();setTool('link')};
+function portKind(d,k){const n=d.ifaces[k].name;if(d.type==='ap')return k===0?'wired uplink':'Wi-Fi radio (clients)';if(/^Gi/i.test(n))return '1 Gbps';if(/^Fa/i.test(n))return '100 Mbps';if(/^Te/i.test(n))return '10 Gbps';if(/^Se/i.test(n))return 'serial WAN';if(/^port/i.test(n))return d.ifaces[k].role?d.ifaces[k].role.toUpperCase():'port';if(/^wlan/i.test(n))return 'Wi-Fi';return 'Ethernet'}
+function linkEnd(d,ifi){
+  if(!linkFrom){linkFrom=d.id;linkFromIf=ifi;topoDirty=true;$('#hint').textContent=tapWords(`${d.name} ${ifi==null?'(auto port)':d.ifaces[ifi].name} selected. Now click the device at the other end.`);return}
+  const a=dev(linkFrom),ai=linkFromIf;linkFrom=null;linkFromIf=null;topoDirty=true;$('#hint').textContent=tapWords(HINTS.link);if(!a)return;
+  if((ai==null||ifi==null)&&S.links.some(l=>(l.a.dev===a.id&&l.b.dev===d.id)||(l.b.dev===a.id&&l.a.dev===d.id))){toast('These two devices are already connected. Pick both ports yourself to add a second cable between them.');return}
+  const l=connect(a,d,ai,ifi);if(l)toast(`Cabled ${a.name} ${a.ifaces[l.a.ifi].name} ↔ ${d.name} ${d.ifaces[l.b.ifi].name}`)}
+function openPortPick(d,x,y){const pp=$('#portPick'),other=linkFrom?dev(linkFrom):null;
+  const rows=d.ifaces.map((i,k)=>({i,k})).filter(({i})=>i.parent==null).map(({i,k})=>{const L=linkAt(d,k),pe=L&&peer(L,d,k);
+    let why='';if(L)why=`in use → ${pe.d.name} ${pe.d.ifaces[pe.ifi].name}`;else if(other&&d.type==='ap'&&k>0&&!isHost(other))why=`Wi-Fi: only for PCs, laptops, servers`;else if(other&&other.type==='ap'&&linkFromIf>0&&d.type==='ap')why='';
+    return `<button data-pp="${k}" class="${L?'':'free'}" ${L||why?'disabled':''}><b>${esc(i.name)}</b><span>${esc(L?why:why||portKind(d,k))}</span></button>`}).join('');
+  $('#ppT').textContent=other?`Other end: ${d.name}`:`Cable from ${d.name}`;$('#ppS').textContent=other?`Cable from ${other.name} ${linkFromIf==null?'(auto port)':other.ifaces[linkFromIf].name}`:'Choose a port for this end';$('#toast').hidden=true;
+  $('#ppL').innerHTML=`<button class="auto" data-pp="auto"><b>Auto</b><span>first free port</span></button>`+rows;
+  pp.hidden=false;const r=pp.getBoundingClientRect();pp.style.left=Math.max(8,Math.min(innerWidth-r.width-8,x+14))+'px';pp.style.top=Math.max(8,Math.min(innerHeight-r.height-8,y-20))+'px';
+  pp.dataset.dev=d.id;pp.dataset.t=String(Date.now());const f=pp.querySelector('.pp-list button:not(:disabled)');if(f)f.focus({preventScroll:true})}
+function closePortPick(){$('#portPick').hidden=true}
+$('#ppL').onclick=e=>{const b=e.target.closest('[data-pp]');if(!b||b.disabled)return;if(Date.now()-(+$('#portPick').dataset.t||0)<400)return;const d=dev($('#portPick').dataset.dev);closePortPick();if(!d)return;linkEnd(d,b.dataset.pp==='auto'?null:+b.dataset.pp)};
+$('#ppX').onclick=()=>{closePortPick();linkFrom=null;linkFromIf=null;topoDirty=true;$('#hint').textContent=tapWords(HINTS.link)};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#portPick').hidden){$('#ppX').onclick()}});
+document.addEventListener('pointerdown',e=>{const pp=$('#portPick');if(!pp.hidden&&!pp.contains(e.target)&&!e.target.closest('#svg'))$('#ppX').onclick()},true);
 let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,3800)}
 
 /* ---------- topology builders ---------- */
@@ -4403,15 +4483,81 @@ function renderPage(d){const pg=$('#wPage');if(!pg)return;const lp=d.lastPage;
   pg.innerHTML='<p class="loading">Loading…</p>'}
 
 /* ---------- device views ---------- */
-function termHTML(){return `<div class="term" id="term"><pre class="tout" id="tout"></pre><div class="tin"><label for="tin" id="tprompt"></label><input id="tin" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Console input"></div></div>`}
+/* ---------- Tab completion and ? help for every console ---------- */
+const PS_CMDS=['Install-WindowsFeature DHCP|DNS|Web-Server|FS-FileServer','Uninstall-WindowsFeature DHCP|DNS|Web-Server|FS-FileServer','Get-WindowsFeature',
+  'Add-DhcpServerv4Scope -Name <name> -StartRange <ip> -EndRange <ip> -SubnetMask <mask>','Set-DhcpServerv4OptionValue -ScopeId <net> -Router <ip> -DnsServer <ip> -DnsDomain <domain>','Add-DhcpServerv4ExclusionRange -ScopeId <net> -StartRange <ip> -EndRange <ip>','Add-DhcpServerv4Reservation -ScopeId <net> -IPAddress <ip> -ClientId <mac>','Get-DhcpServerv4Scope','Get-DhcpServerv4Lease','Remove-DhcpServerv4Scope -ScopeId <net>',
+  'Add-DnsServerPrimaryZone -Name <zone>','Add-DnsServerResourceRecordA -ZoneName <zone> -Name <host> -IPv4Address <ip>','Add-DnsServerResourceRecordCName -ZoneName <zone> -Name <alias> -HostNameAlias <fqdn>','Add-DnsServerResourceRecordMX -ZoneName <zone> -Name <name> -MailExchange <fqdn> -Preference <n>','Get-DnsServerZone','Get-DnsServerResourceRecord -ZoneName <zone>','Remove-DnsServerResourceRecord -ZoneName <zone> -Name <name>','Remove-DnsServerZone -Name <zone>','Set-DnsServerForwarder -IPAddress <ip>','Add-DnsServerForwarder -IPAddress <ip>',
+  'New-Website -Name <name> -HostHeader <host>','Get-Website','Remove-Website -Name <name>','New-SmbShare -Name <share> -Path <path>','Get-SmbShare','Remove-SmbShare -Name <share>'];
+function hostTemplates(d){const L=['ipconfig  show IP settings','ipconfig /all','ipconfig /renew  ask DHCP for an address','ipconfig /renew6  IPv6 autoconfiguration','ip dhcp  get an address from DHCP','ip <addr/len> <gateway>  static IPv4 address','dns <server-ip>|off','ping <ip>  ICMP echo','tracert <ip>  trace the path','nslookup <name>  DNS lookup','http <url>  load a web page','voice <ip>  test voice call','arp -a|-d','ipv6 autoconfig  SLAAC','ipv6 gateway <addr>','ipv6 off','ipv6 <addr/len> <gateway>','netsh interface ipv6 show neighbors','net use <\\\\server\\share> </user:name>','net view <\\\\server>','Resolve-DnsName <name>','Test-NetConnection <host> -Port <n>','Get-NetIPConfiguration','help','cls'];
+  if(d.type==='pc')L.push('proxy <ip:port>|off');
+  if(d.type==='server'||d.type==='nas')L.push('service http|dns on|off','site <title text>','dns add <name> <ip>','dns del <name>','dns forward <ip>|off','show services');
+  if(isSrv(d))L.push(...PS_CMDS);
+  if(d.type==='proxy')L.push('mode block|allow','allow <domain>','disallow <domain>','block <domain>','unblock <domain>','cache on|off','clear cache','show blocklist|cache');
+  return L}
+function iosHelpLines(d){const T=d.term,isR=isL3(d),ty=d.type;let h=(IOSHELP[T.mode]||[]).slice();
+  if(!isR)h=h.filter(x=>!/ip route|dhcp|rip|ip address|traceroute|show arp|show ip route|clear arp|nat|ospf|encapsulation|access-|crypto|ipv6/.test(x));else if(d.type!=='router')h=h.filter(x=>!/ipv6/.test(x));
+  if(EXTRA[ty]&&EXTRA[ty][T.mode])h=h.concat(EXTRA[ty][T.mode]);
+  if(T.mode==='priv')h.push('show running-config','ping ipv6 <ip>','clear ipv6 neighbors');
+  if(T.mode==='if')h.push('shutdown','no shutdown','description <text>');
+  if(!['user','priv'].includes(T.mode))h.push('end','exit');
+  return h}
+function fosTemplates(d){const S2=(d.term.fos)||{};const P='<port>';
+  if(!S2.sec)return ['config system interface','config firewall address','config firewall vip','config firewall policy','config router static','show','show full-configuration','show firewall policy','get system interface','get system status','get router info routing-table all','diagnose sys session list','execute ping <ip>','execute traceroute <ip>','help'];
+  if(S2.edit==null)return ['edit <name|id>','delete <name|id>','show','end'];
+  const F={'system interface':['set ip <ip> <mask>','set role lan|wan|dmz','set allowaccess ping|https|ssh|http','set alias <text>','set status up|down'],'firewall address':['set subnet <ip> <mask>'],'firewall vip':['set extip <ip>','set extintf '+P,'set mappedip <ip>'],
+    'firewall policy':['set name <text>','set srcintf '+P,'set dstintf '+P,'set srcaddr all|<address>','set dstaddr all|<address>','set action accept|deny','set service ALL|HTTP|HTTPS|DNS|PING|SSH|SMB','set schedule always','set nat enable|disable'],'router static':['set dst <ip> <mask>','set gateway <ip>','set device '+P]}[S2.sec]||[];
+  return [...F,'unset <field>','next','end','show']}
+/* parse "cmd words <arg> a|b  description" lines into token specs */
+function parseTemplates(lines){const out=[];
+  lines.forEach(line=>{String(line).split(/\s+\|\s+/).forEach(alt=>{const t=alt.trim();if(!t||/^[A-Z][^<]*:$/.test(t))return;const cmd=t.split(/\s{2,}/)[0],desc=t.split(/\s{2,}/).slice(1).join(' ');
+    const toks=cmd.split(/\s+/).filter(Boolean);const spec=[];for(const w of toks){if(/^[(…]|^e\.g\./.test(w))break;if(/^</.test(w)||/^\[/.test(w)){spec.push({ph:w.replace(/[\[\]]/g,'')});continue}spec.push({lit:w.split('|').filter(Boolean)})}
+    if(spec.length)out.push({spec,text:cmd,desc})})});return out}
+function consoleTemplates(d){if(isHost(d))return parseTemplates(hostTemplates(d));if(d.type==='firewall'&&d.platform==='fortios')return parseTemplates(fosTemplates(d));return parseTemplates(iosHelpLines(d))}
+const isIfPh=ph=>/<(gi|fa|port|if|interface|nameif)/i.test(ph);
+function ifChoices(d,ph){if(/nameif/i.test(ph))return [...new Set(d.ifaces.map(i=>i.zone).filter(Boolean))];return d.ifaces.map(i=>isHost(d)||d.platform==='fortios'?i.name:i.name.toLowerCase())}
+/* returns {opts:[{w,text,desc}], phs:[...], partial, base} */
+function completions(d,input){
+  let base='',body=input;const T=d.term;
+  if(!isHost(d)&&d.platform!=='fortios'&&!['user','priv'].includes(T.mode)&&/^\s*do\s+/i.test(input)){const m=input.match(/^\s*do\s+/i)[0];base=input.slice(0,m.length);body=input.slice(m.length);const sv=T.mode;T.mode='priv';try{return completeIn(d,body,base)}finally{T.mode=sv}}
+  return completeIn(d,body,base)}
+function completeIn(d,body,base){
+  const ends=/\s$/.test(body)||body==='';const toks=body.trim()?body.trim().split(/\s+/):[];const partial=ends?'':toks.pop();
+  const lc=s=>String(s).toLowerCase();
+  const opts=new Map(),phs=new Map();
+  const tps=consoleTemplates(d),exact=toks.map((t,i)=>tps.some(tp=>tp.spec[i]&&tp.spec[i].lit&&tp.spec[i].lit.some(w=>lc(w)===lc(t))));
+  let full=false;
+  for(const tp of tps){const sp=tp.spec;if(sp.length<toks.length+(partial?1:0))continue;let ok=true;
+    for(let i=0;i<toks.length;i++){const s=sp[i];if(s.lit){if(!s.lit.some(w=>exact[i]?lc(w)===lc(toks[i]):lc(w).startsWith(lc(toks[i])))){ok=false;break}}}
+    if(!ok)continue;if(!partial&&sp.length===toks.length){full=true;continue}const nx=sp[toks.length];if(!nx)continue;
+    if(nx.lit)nx.lit.forEach(w=>{if(lc(w).startsWith(lc(partial))&&!opts.has(lc(w)))opts.set(lc(w),{w,text:tp.text,desc:tp.desc})});
+    else{if(isIfPh(nx.ph))ifChoices(d,nx.ph).forEach(w=>{if(lc(w).startsWith(lc(partial))&&!opts.has(lc(w)))opts.set(lc(w),{w,text:tp.text,desc:'interface'})});if(!phs.has(nx.ph))phs.set(nx.ph,tp.text)}}
+  return {opts:[...opts.values()],phs:[...phs.entries()],partial,full,before:base+(body.trim()?body.slice(0,body.length-partial.length):body)}}
+function commonPrefix(a){if(!a.length)return '';let p=a[0];for(const s of a)while(!s.toLowerCase().startsWith(p.toLowerCase()))p=p.slice(0,-1);return p}
+function showOptions(d,input,c,withDesc){tprint(d,promptOf(d)+input+(withDesc?'?':''));
+  const rows=c.opts.map(o=>withDesc?`  ${o.w.padEnd(22)}${o.desc||o.text}`:o.w);
+  if(withDesc)c.phs.forEach(([ph,text])=>rows.push(`  ${ph.padEnd(22)}${text}`));
+  if(withDesc&&c.full)rows.push('  <cr>');
+  if(!rows.length){tprint(d,withDesc?'% Unrecognized command':'(no completions)');return}
+  if(withDesc)tprint(d,rows.join('\n'));else{const w=Math.max(...rows.map(r=>r.length))+2,per=Math.max(1,Math.floor(64/w));let out=[];for(let i=0;i<rows.length;i+=per)out.push(rows.slice(i,i+per).map(r=>r.padEnd(w)).join(''));tprint(d,out.join('\n'))}}
+function tabComplete(d,tin){const v=tin.value,c=completions(d,v);
+  const words=c.opts.map(o=>o.w);
+  if(words.length===1){tin.value=c.before+words[0]+' ';return}
+  if(words.length>1){const cp=commonPrefix(words);if(cp.length>c.partial.length){tin.value=c.before+cp;return}showOptions(d,v,c,false);return}
+  if(c.phs.length){tprint(d,promptOf(d)+v);tprint(d,c.phs.map(([ph,text])=>`  ${ph}   e.g. ${text}`).join('\n'));return}
+  if(c.full)return;tprint(d,promptOf(d)+v);tprint(d,'(no completions)')}
+
+function termHTML(){return `<div class="term" id="term"><pre class="tout" id="tout"></pre><div class="tin"><label for="tin" id="tprompt"></label><input id="tin" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" aria-label="Console input"><button type="button" class="tkey" data-k="tab" title="Complete the command (Tab)">Tab</button><button type="button" class="tkey" data-k="q" title="Show what can come next (?)">?</button></div></div>`}
 function wireTerm(d){const tin=$('#tin');if(!tin)return;
   tin.addEventListener('keydown',e=>{const T=d.term;
+    if(e.key==='Tab'&&!e.shiftKey&&!e.altKey&&!e.ctrlKey&&!e.metaKey){e.preventDefault();tabComplete(d,tin);termDirty=true;return}
+    if(e.key==='?'&&!isHost(d)){e.preventDefault();showOptions(d,tin.value,completions(d,tin.value),true);termDirty=true;return}
     if(e.key==='Enter'){const v=tin.value;tin.value='';if(v.trim()){T.hist.push(v);T.hi=T.hist.length}runCmd(d,v);afterUserCmd()}
     else if(e.key==='ArrowUp'){if(T.hi>0){T.hi--;tin.value=T.hist[T.hi]||''}e.preventDefault()}
     else if(e.key==='ArrowDown'){if(T.hi<T.hist.length){T.hi++;tin.value=T.hist[T.hi]||''}e.preventDefault()}
     else if(e.key==='c'&&e.ctrlKey){if(d.session){d.session=null;tprint(d,'^C')}else if(!isHost(d)&&!['user','priv'].includes(T.mode)){T.mode='priv';tprint(d,'^C')}e.preventDefault()}
     else if(e.key==='z'&&e.ctrlKey&&!isHost(d)){if(!['user','priv'].includes(T.mode))T.mode='priv';tprint(d,'^Z');termDirty=true;e.preventDefault()}});
-  $('#term').addEventListener('click',e=>{if(e.target.id!=='tin'&&!window.getSelection().toString())tin.focus()})}
+  $$('#term .tkey').forEach(b=>{b.addEventListener('pointerdown',e=>e.preventDefault());b.onclick=()=>{if(b.dataset.k==='tab')tabComplete(d,tin);else showOptions(d,tin.value,completions(d,tin.value),true);termDirty=true;tin.focus();const n=tin.value.length;try{tin.setSelectionRange(n,n)}catch(_){}}});
+  $('#term').addEventListener('click',e=>{if(e.target.id!=='tin'&&!e.target.closest('.tkey')&&!window.getSelection().toString())tin.focus()})}
 function renderTerm(d){const o=$('#tout');if(!o)return;o.textContent=d.term.lines.join('\n');o.scrollTop=o.scrollHeight;$('#tprompt').textContent=promptOf(d)}
 const VIEWS=d=>isSrv(d)||d.type==='proxy'?[['roles',d.type==='proxy'?'Proxy settings':'Server roles'],['cli','Command line'],['files','Config files'],['physical','Physical'],['learn','Learn']]:(d.type==='pc'||d.type==='laptop')?[['desktop','Desktop'],['cli','Command line'],['physical','Physical'],['learn','Learn']]:[['cli',isHost(d)?'Command line':'CLI'],['physical','Physical'],['learn','Learn']];
 function buildView(d){const v=$('#dview');if(!v)return;const view=d.view||VIEWS(d)[0][0];$$('[data-dv]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.dv===view));
