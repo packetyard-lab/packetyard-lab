@@ -3,11 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-BJvKIGFpxPffYCbj2jIU/iGMLmb/hWzBiCdgletid/Y='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Pj643J+szo3R2ZH1KUO4R6AUo0mZqwuElKDWuMJDy80='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'; manifest-src 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="description" content="Packetyard: a browser-based network lab for learning protocols.">
 <style>body{margin:0}img{max-width:100%}</style>
 <title>Packetyard</title>
+<!-- Donation link: put your https link in content="" (Buy Me a Coffee, Ko-fi, GitHub Sponsors, PayPal.me, Patreon or Liberapay). Leave empty to hide the button. -->
+<meta name="packetyard:donate" content="">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -354,7 +356,22 @@ button.brand{border:0;background:none;padding:0;cursor:pointer;color:inherit;fon
 .wfoot{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:12px}
 @media (max-width:760px){.wbox{padding:16px 14px 14px;border-radius:14px;max-height:none}.welcome{place-items:start center}.wnet{width:100%}}
 @media (prefers-reduced-motion:reduce){.wbox,.wpath{animation:none}.wq{transition:none}}
-.barscroll{display:contents}.btn .short{display:none}
+.barscroll{display:contents}
+.donate{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;background:#ffdd00;color:#1a1a1a;font-weight:600;font-size:13.5px;text-decoration:none;border:1px solid #e6c700}
+.donate:hover{background:#ffe433}.donate:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.note .donate{padding:3px 10px;font-size:12.5px}
+.bgpresets{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.bgpresets button{display:flex;flex-direction:column;gap:6px;align-items:stretch;border:1px solid var(--line);background:var(--canvas);border-radius:10px;padding:6px;cursor:pointer;color:var(--ink);font:inherit;font-size:12.5px}
+.bgpresets button:hover,.bgpresets button[aria-pressed="true"]{border-color:var(--accent)}
+.bgpresets svg{width:100%;height:auto;border-radius:6px;background:var(--panel)}
+.bgctl{grid-template-columns:1fr 1fr}
+.fpv .fp-wall{fill:none;stroke:var(--muted);stroke-width:4;stroke-linejoin:round}
+.fpv .fp-room{fill:var(--accent-soft);stroke:var(--muted);stroke-width:2}
+.fpv .fp-alt{fill:var(--panel);stroke:var(--muted);stroke-width:2}
+.fpv .fp-road{fill:none;stroke:var(--line);stroke-width:26;stroke-linecap:round}
+.fpv .fp-rack{fill:var(--panel);stroke:var(--muted);stroke-width:1.5}
+.fpv .fp-door{stroke:var(--canvas);stroke-width:6}
+.fpv text{font:600 18px var(--ui);fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}.btn .short{display:none}
 .zoomctl{position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:4px;z-index:2}
 .zoomctl button{width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;cursor:pointer;font:600 17px/1 var(--ui);box-shadow:var(--shadow);padding:0}
 .zoomctl button:hover{border-color:var(--accent)}
@@ -416,6 +433,7 @@ button.brand{border:0;background:none;padding:0;cursor:pointer;color:inherit;fon
       <span class="clock" id="clock">t 0.0 s</span>
     </div>
     <div class="grp">
+      <button class="btn" id="bgBtn" title="Put a floor plan, map or photo behind the network"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M2.5 11l3.5-3.5 3 3 2-2 2.5 2.5"/><circle cx="10.5" cy="6" r="1"/></svg><span class="lbl">Background</span></button>
       <button class="btn" id="resetBtn" title="Clear packets, caches, tables, leases, connections and learned routes">Reset tables</button>
     </div>
     <div class="grp" aria-label="Display">
@@ -436,6 +454,7 @@ button.brand{border:0;background:none;padding:0;cursor:pointer;color:inherit;fon
       <svg id="svg" viewBox="0 0 1300 780" preserveAspectRatio="xMidYMid meet" aria-label="Network topology">
         <defs><pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r="1.3" class="gridbg"/></pattern></defs>
         <rect x="-2000" y="-2000" width="5300" height="4780" fill="url(#dots)"/>
+        <g id="gBg" class="fpv"></g>
         <g id="gLinks"></g><g id="gDevs"></g><g id="gPkts"></g>
       </svg>
       <div class="zoomctl" aria-label="Zoom"><button id="zIn" title="Zoom in" aria-label="Zoom in">+</button><button id="zOut" title="Zoom out" aria-label="Zoom out">−</button><button id="zFit" title="Fit the whole network" aria-label="Fit the whole network"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4"/></svg></button></div>
@@ -458,10 +477,23 @@ button.brand{border:0;background:none;padding:0;cursor:pointer;color:inherit;fon
     </aside>
   </main>
 </div>
+<div class="modal" id="bgModal" hidden>
+  <div class="mbox" role="dialog" aria-label="Canvas background">
+    <div class="mtop"><h2>Canvas background</h2><button class="btn" id="bgClose">Close</button></div>
+    <p class="note">Put your own floor plan, site map or a photo behind the network, then drag devices to where they really are. The image is saved with the project.</p>
+    <div class="nbtns"><label class="btn primary filebtn">Upload an image…<input type="file" id="bgFile" accept="image/png,image/jpeg,image/webp,image/gif"></label><button class="btn" id="bgNone">No background</button></div>
+    <div class="drop" id="bgDrop">Or drop an image here (PNG, JPG, WebP). On a phone you can pick a photo or take one.</div>
+    <h3>Or start from a ready-made plan</h3>
+    <div class="bgpresets" id="bgPresets"></div>
+    <div class="form bgctl"><label>Opacity<input type="range" id="bgOp" min="10" max="100" step="5"></label><label>Fit<select id="bgFit"><option value="meet">Fit whole image</option><option value="slice">Fill the canvas</option><option value="none">Stretch</option></select></label></div>
+    <p class="note" id="bgMsg"></p>
+  </div>
+</div>
 <div class="modal" id="libModal" hidden>
   <div class="mbox wide" role="dialog" aria-label="Scenarios, demos and labs">
     <div class="mtop"><h2>Scenarios, demos &amp; labs</h2><button class="btn" id="libClose">Close</button></div>
     <div id="libBody" style="display:flex;flex-direction:column;gap:18px"></div>
+    <p class="note" data-donate-wrap hidden>Enjoying Packetyard? <a class="donate" data-donate target="_blank" rel="noopener noreferrer">☕ Buy me a coffee</a> to support new labs and features.</p>
     <p class="note">Product and vendor names (Cisco, Fortinet, Aruba, Synology and others) are trademarks of their owners and are used only as text labels. Packetyard is not affiliated with or endorsed by them; CLI styles are simplified for training.</p>
   </div>
 </div>
@@ -499,7 +531,7 @@ button.brand{border:0;background:none;padding:0;cursor:pointer;color:inherit;fon
     <div class="wquick" id="wQuick"></div>
     <h2 class="wh2">Choose your path</h2>
     <div class="wpaths" id="wPaths"></div>
-    <div class="wfoot"><label class="chk"><input type="checkbox" id="wShow"> Show this screen when the app opens</label><span class="note">Reopen it any time by tapping the Packetyard name.</span></div>
+    <div class="wfoot"><label class="chk"><input type="checkbox" id="wShow"> Show this screen when the app opens</label><a class="donate" data-donate hidden target="_blank" rel="noopener noreferrer">☕ Buy me a coffee</a><span class="note">Reopen it any time by tapping the Packetyard name.</span></div>
   </div>
 </div>
 <div class="toast" id="toast" hidden></div>
@@ -515,7 +547,7 @@ const PING_TIMEOUT=30000,ARP_TIMEOUT=8000,RIP_INT=12000,DHCP_TIMEOUT=20000,TCP_T
 const rnd=n=>Math.floor(Math.random()*n);
 
 /* ---------- display preferences ---------- */
-const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}};
 const rootEl=document.documentElement,hostTheme=rootEl.getAttribute('data-theme');
 function applyTheme(v){if(v==='system'){if(hostTheme)rootEl.setAttribute('data-theme',hostTheme);else rootEl.removeAttribute('data-theme')}else rootEl.setAttribute('data-theme',v);store.set('packetyard.theme',v);$('#themeSel').value=v}
 function applyCb(on){if(on)rootEl.setAttribute('data-cb','1');else rootEl.removeAttribute('data-cb');store.set('packetyard.cb',on?'1':'0');$('#cbMode').checked=on}
@@ -624,7 +656,7 @@ function removeDev(d){S.links.filter(l=>l.a.dev===d.id||l.b.dev===d.id).forEach(
 
 /* ---------- persistence ---------- */
 const CFG=['id','type','name','x','y','gw','dns','proxy','routes','rip','dhcp','nat','fw','sd','svc','prx','dhcpClient','model','ssid','vlans','ospf','stp','acls','crypto','platform','fos','objs','routes6','gw6','gw6src','v6r'];
-function serialize(){return {app:'packetyard',v:2,devices:S.devices.map(d=>{const o={};CFG.forEach(k=>o[k]=d[k]);o.x=Math.round(d.x);o.y=Math.round(d.y);o.ifaces=d.ifaces.map(i=>{const x={name:i.name,mac:i.mac,ip:i.ip,mask:i.mask,up:i.up,nat:i.nat,zone:i.zone,level:i.level,transport:i.transport};['mode','vlan','allowed','native','parent','encap','ospfCost','aclIn','aclOut','cryptoMap','stpCost','stpEdge','helper','role','allowaccess','v6','v6auto','v6en'].forEach(k=>{if(i[k]!=null&&i[k]!=='')x[k]=i[k]});return x});return o}),links:S.links.map(l=>({id:l.id,a:l.a,b:l.b,delay:l.delay,loss:l.loss,cut:l.cut,label:l.label,wifi:!!l.wifi,cable:l.cable}))}}
+function serialize(){return {app:'packetyard',v:2,devices:S.devices.map(d=>{const o={};CFG.forEach(k=>o[k]=d[k]);o.x=Math.round(d.x);o.y=Math.round(d.y);o.ifaces=d.ifaces.map(i=>{const x={name:i.name,mac:i.mac,ip:i.ip,mask:i.mask,up:i.up,nat:i.nat,zone:i.zone,level:i.level,transport:i.transport};['mode','vlan','allowed','native','parent','encap','ospfCost','aclIn','aclOut','cryptoMap','stpCost','stpEdge','helper','role','allowaccess','v6','v6auto','v6en'].forEach(k=>{if(i[k]!=null&&i[k]!=='')x[k]=i[k]});return x});return o}),links:S.links.map(l=>({id:l.id,a:l.a,b:l.b,delay:l.delay,loss:l.loss,cut:l.cut,label:l.label,wifi:!!l.wifi,cable:l.cable})),...(S.bg?{bg:S.bg}:{})}}
 /* ---------- security: everything loaded from a file, pasted text or storage is untrusted ---------- */
 const BADKEYS=new Set(['__proto__','constructor','prototype']);
 const safeName=v=>String(v||'').replace(/[^A-Za-z0-9_.\-]/g,'').slice(0,20);
@@ -636,8 +668,8 @@ function cleanVal(v,depth){if(depth>24)return null;
   return null}
 function sanitizeProject(raw){
   if(!raw||typeof raw!=='object'||!Array.isArray(raw.devices))throw new Error('bad');
-  if(JSON.stringify(raw).length>8e6)throw new Error('too large');
-  const o=cleanVal(raw,0),ids=new Set(),devs=[];
+  if(JSON.stringify(raw).length>12e6)throw new Error('too large');
+  const bg=cleanBg(raw.bg);const o=cleanVal({...raw,bg:null},0),ids=new Set(),devs=[];
   (o.devices||[]).slice(0,400).forEach(d=>{if(!d||typeof d!=='object'||!TYPES[d.type]||!/^d\d{1,7}$/.test(d.id)||ids.has(d.id)||!Array.isArray(d.ifaces)||!d.ifaces.length)return;
     d.name=safeName(d.name)||nextName(d.type);d.x=Math.max(0,Math.min(W,+d.x||0));d.y=Math.max(0,Math.min(H,+d.y||0));
     d.ifaces=d.ifaces.slice(0,64).filter(i=>i&&typeof i==='object').map(i=>({...i,name:String(i.name||'eth').replace(/[^A-Za-z0-9/.\-]/g,'').slice(0,24)||'eth',mac:/^[0-9a-f]{2}(:[0-9a-f]{2}){5}$/.test(i.mac)?i.mac:newMac()}));
@@ -646,12 +678,13 @@ function sanitizeProject(raw){
   const links=(Array.isArray(o.links)?o.links:[]).slice(0,2000).filter(l=>{if(!l||!/^[a-z]{1,3}\d{1,7}$/.test(String(l.id))||!l.a||!l.b)return false;
     const A=devs.find(d=>d.id===l.a.dev),B=devs.find(d=>d.id===l.b.dev);return A&&B&&A!==B&&Number.isInteger(l.a.ifi)&&Number.isInteger(l.b.ifi)&&l.a.ifi>=0&&l.b.ifi>=0&&l.a.ifi<A.ifaces.length&&l.b.ifi<B.ifaces.length});
   links.forEach(l=>{l.delay=Math.max(0.25,Math.min(10,+l.delay||1));l.loss=Math.max(0,Math.min(100,+l.loss||0));if(l.cable&&!CABLES[l.cable])delete l.cable});
-  return {...o,devices:devs,links}}
+  return {...o,devices:devs,links,bg}}
 function load(o){
   o=sanitizeProject(o);
   const prep=o.devices.map(d=>{try{return runtime(JSON.parse(JSON.stringify(d)))}catch(e){
     return runtime({id:d.id,type:d.type,name:d.name,x:d.x,y:d.y,model:typeof d.model==='string'?d.model:'',ifaces:d.ifaces.map(i=>({name:i.name,mac:i.mac,ip:validIp(i.ip)?i.ip:'',mask:validMask(i.mask)?i.mask:'',up:!!i.up}))})}});
   clearAll();
+  S.bg=o.bg||null;renderBg();
   S.devices=prep;
   S.links=JSON.parse(JSON.stringify(o.links||[])).map(l=>({delay:1,loss:0,cut:false,label:'',...l}));
   S.links.forEach(l=>{if(!l.cable){const A=S.devices.find(d=>d.id===l.a.dev),B=S.devices.find(d=>d.id===l.b.dev);l.cable=l.wifi?'wifi':(A&&B?autoCable(A,B,l.a.ifi,l.b.ifi):'straight')}});
@@ -660,7 +693,7 @@ function load(o){
   topoDirty=panelDirty=true;save();
 }
 function save(){store.set('packetyard.topo2',JSON.stringify(serialize()))}
-function clearAll(){S.devices=[];S.links=[];S.nextId=1;sim.packets=[];sim.timers=[];selId=null;selLink=null;inspected=null;linkFrom=null;needFit=true;events=[];RES={ping:[],http:[],voice:[],auto:[],blocked:[],smb:[]};renderEvents();topoDirty=panelDirty=narrDirty=true}
+function clearAll(){S.bg=null;if(typeof renderBg==='function')renderBg();S.devices=[];S.links=[];S.nextId=1;sim.packets=[];sim.timers=[];selId=null;selLink=null;inspected=null;linkFrom=null;needFit=true;events=[];RES={ping:[],http:[],voice:[],auto:[],blocked:[],smb:[]};renderEvents();topoDirty=panelDirty=narrDirty=true}
 function resetTables(){
   sim.packets=[];sim.timers=[];
   S.devices.forEach(d=>{Object.assign(d,{arp:{},mact:{},pending:[],arpWait:{},session:null,ripRoutes:[],bindings:{},dhcpc:null,tcp:{},dnsWait:{},dnsFwd:{},natT:[],conns:[],tunnels:{},cache:{},nd:{},ndWait:{},pend6:[],v6rt:null});if(d.rip.on)d.ripNext=sim.t+500;if(d.type==='sdwan')d.sdNext=sim.t+200;d.ospfRt=freshOspf();d.vpnRt={sas:{}}});stpConverge();
@@ -2991,8 +3024,9 @@ const VB={x:0,y:0,w:W,h:H},ptrs=new Map();let pan=null,pinch=null,needFit=true,a
 function setVB(){VB.w=Math.max(220,Math.min(W*2.2,VB.w));VB.h=VB.w*H/W;VB.x=Math.max(-VB.w*0.6,Math.min(W-VB.w*0.4,VB.x));VB.y=Math.max(-VB.h*0.6,Math.min(H-VB.h*0.4,VB.y));svg.setAttribute('viewBox',`${VB.x.toFixed(1)} ${VB.y.toFixed(1)} ${VB.w.toFixed(1)} ${VB.h.toFixed(1)}`)}
 function zoomAt(cx,cy,f){autoFit=false;const nw=Math.max(220,Math.min(W*2.2,VB.w*f));const k=nw/VB.w;VB.x=cx-(cx-VB.x)*k;VB.y=cy-(cy-VB.y)*k;VB.w=nw;setVB()}
 function zoomBy(f){zoomAt(VB.x+VB.w/2,VB.y+VB.h/2,f)}
-function fitView(){autoFit=true;if(!S.devices.length){const w=innerWidth<=760?820:W;Object.assign(VB,{w,h:w*H/W,x:(W-w)/2,y:(H-w*H/W)/2});return setVB()}
+function fitView(){autoFit=true;if(!S.devices.length){const w=innerWidth<=760&&!S.bg?820:W;Object.assign(VB,{w,h:w*H/W,x:(W-w)/2,y:(H-w*H/W)/2});return setVB()}
   let x0=Math.min(...S.devices.map(d=>d.x))-70,x1=Math.max(...S.devices.map(d=>d.x))+70,y0=Math.min(...S.devices.map(d=>d.y))-55,y1=Math.max(...S.devices.map(d=>d.y))+65;
+  if(S.bg){x0=Math.min(x0,0);y0=Math.min(y0,0);x1=Math.max(x1,W);y1=Math.max(y1,H)}
   const rc=svg.getBoundingClientRect(),asp=rc.width&&rc.height?rc.width/rc.height:W/H,k=H/W;let w=Math.max((x1-x0)/Math.max(1,k*asp),(y1-y0)/Math.max(k,1/asp),innerWidth<=760?560:700);if(innerWidth>1020)w=Math.max(w,W*0.8);
   VB.w=w;VB.h=w*H/W;VB.x=(x0+x1)/2-w/2;VB.y=(y0+y1)/2-VB.h/2;setVB()}
 if('ResizeObserver' in window){let rz=0;new ResizeObserver(()=>{if(!autoFit||!S.devices.length)return;cancelAnimationFrame(rz);rz=requestAnimationFrame(fitView)}).observe(svg)}
@@ -3078,6 +3112,44 @@ $('#welcome').addEventListener('click',e=>{const b=e.target.closest('[data-w],[d
 $('#wShow').onchange=e=>store.set('packetyard.welcome',e.target.checked?'on':'off');
 $('#brandBtn').onclick=openWelcome;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#welcome').hidden)closeWelcome()});
+/* ---------- canvas background (floor plans, maps, photos) ---------- */
+const BGPRESETS={
+  office:{name:'Office floor',svg:`<rect class="fp-wall" x="40" y="40" width="1220" height="700" rx="6"/><rect class="fp-room" x="40" y="40" width="300" height="240"/><text x="70" y="80">Reception</text><rect class="fp-alt" x="40" y="280" width="300" height="200"/><text x="70" y="320">Meeting room</text><rect class="fp-room" x="40" y="480" width="300" height="260"/><text x="70" y="520">Manager office</text><rect class="fp-alt" x="340" y="40" width="680" height="700"/><text x="370" y="80">Open office</text><rect class="fp-room" x="1020" y="40" width="240" height="300"/><text x="1045" y="80">Server room</text><rect class="fp-alt" x="1020" y="340" width="240" height="190"/><text x="1045" y="380">Comms / IDF</text><rect class="fp-room" x="1020" y="530" width="240" height="210"/><text x="1045" y="570">Break room</text><line class="fp-door" x1="340" y1="140" x2="340" y2="200"/><line class="fp-door" x1="340" y1="360" x2="340" y2="420"/><line class="fp-door" x1="1020" y1="160" x2="1020" y2="220"/><line class="fp-door" x1="1020" y1="410" x2="1020" y2="470"/>`},
+  campus:{name:'Campus map',svg:`<path class="fp-road" d="M20 560 H1280 M650 20 V760"/><rect class="fp-room" x="70" y="70" width="460" height="400" rx="10"/><text x="100" y="110">Building A · HQ</text><rect class="fp-alt" x="770" y="70" width="460" height="300" rx="10"/><text x="800" y="110">Building B · Engineering</text><rect class="fp-room" x="770" y="620" width="460" height="130" rx="10"/><text x="800" y="660">Building C · Warehouse</text><rect class="fp-alt" x="70" y="620" width="300" height="130" rx="10"/><text x="100" y="660">Data center</text><text x="560" y="545">Fiber backbone</text>`},
+  dc:{name:'Data center',svg:`<rect class="fp-wall" x="40" y="40" width="1220" height="700" rx="6"/>${[0,1,2,3].map(r=>Array.from({length:9},(_,i)=>`<rect class="fp-rack" x="${180+i*110}" y="${110+r*160}" width="90" height="70" rx="4"/>`).join('')+`<text x="60" y="${155+r*160}">Row ${'ABCD'[r]}</text>`).join('')}<text x="180" y="730">Cold aisle / hot aisle · top-of-rack switches</text>`},
+  branches:{name:'HQ and branches',svg:`<rect class="fp-room" x="470" y="40" width="360" height="240" rx="14"/><text x="500" y="80">Headquarters</text><rect class="fp-alt" x="40" y="470" width="330" height="270" rx="14"/><text x="70" y="510">Branch · north</text><rect class="fp-alt" x="485" y="470" width="330" height="270" rx="14"/><text x="515" y="510">Branch · east</text><rect class="fp-alt" x="930" y="470" width="330" height="270" rx="14"/><text x="960" y="510">Branch · south</text><path class="fp-road" d="M650 280 V350 M205 470 V400 H1095 V470 M650 400 V470" style="stroke-width:10;stroke-dasharray:4 14"/><text x="560" y="385">WAN / Internet</text>`},
+  home:{name:'Home / small office',svg:`<rect class="fp-wall" x="140" y="60" width="1020" height="660" rx="6"/><rect class="fp-room" x="140" y="60" width="420" height="330"/><text x="170" y="100">Living room</text><rect class="fp-alt" x="560" y="60" width="300" height="330"/><text x="590" y="100">Study</text><rect class="fp-room" x="860" y="60" width="300" height="330"/><text x="890" y="100">Bedroom</text><rect class="fp-alt" x="140" y="390" width="560" height="330"/><text x="170" y="430">Kitchen</text><rect class="fp-room" x="700" y="390" width="460" height="330"/><text x="730" y="430">Garage · network cabinet</text>`}};
+const BG_RE=/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/;
+function cleanBg(b){if(!b||typeof b!=='object')return null;const op=Math.max(0.1,Math.min(1,+b.opacity||0.6)),fit=['meet','slice','none'].includes(b.fit)?b.fit:'meet';
+  if(b.kind==='preset'&&BGPRESETS[b.name])return {kind:'preset',name:b.name,opacity:op,fit};
+  if(b.kind==='image'&&typeof b.src==='string'&&b.src.length<4e6&&BG_RE.test(b.src))return {kind:'image',src:b.src,opacity:op,fit};return null}
+function renderBg(){const g=$('#gBg');if(!g)return;const b=S.bg;if(!b){g.innerHTML='';return}
+  if(b.kind==='preset')g.innerHTML=`<g opacity="${b.opacity}">${BGPRESETS[b.name].svg}</g>`;
+  else g.innerHTML=`<image href="${esc(b.src)}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="${b.fit==='none'?'none':'xMidYMid '+b.fit}" opacity="${b.opacity}"/>`}
+function setBg(b){S.bg=cleanBg(b);renderBg();if(S.bg)fitView();const ok=store.set('packetyard.topo2',JSON.stringify(serialize()));if(!ok)$('#bgMsg').textContent='The image is on the canvas but too large to autosave in this browser. Use Projects → Download file to keep it.';syncBgForm()}
+function syncBgForm(){const b=S.bg;$('#bgOp').value=Math.round((b?b.opacity:0.6)*100);$('#bgFit').value=b?b.fit:'meet';$('#bgFit').disabled=!b||b.kind!=='image';$('#bgOp').disabled=!b;
+  $$('#bgPresets button').forEach(x=>x.setAttribute('aria-pressed',!!(b&&b.kind==='preset'&&b.name===x.dataset.bg)))}
+function loadBgFile(file){const msg=$('#bgMsg');if(!file)return;if(!/^image\/(png|jpeg|webp|gif)$/.test(file.type))return msg.textContent='Use a PNG, JPG, WebP or GIF image.';if(file.size>25e6)return msg.textContent='That image is over 25 MB. Pick a smaller one.';
+  msg.textContent='Preparing the image…';const url=URL.createObjectURL(file),img=new Image();
+  img.onload=()=>{const k=Math.min(1,1600/Math.max(img.naturalWidth,img.naturalHeight)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.naturalWidth*k));c.height=Math.max(1,Math.round(img.naturalHeight*k));
+    const x=c.getContext('2d');x.fillStyle='#ffffff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);
+    const src=c.toDataURL('image/jpeg',0.82);setBg({kind:'image',src,opacity:S.bg&&S.bg.kind==='image'?S.bg.opacity:0.7,fit:'meet'});
+    if(!/too large/.test(msg.textContent))msg.textContent=`Background set (${c.width}×${c.height}, ${Math.round(src.length*0.75/1024)} KB). Drag devices onto it.`};
+  img.onerror=()=>{URL.revokeObjectURL(url);msg.textContent="That file couldn't be read as an image."};img.src=url}
+$('#bgPresets').innerHTML=Object.entries(BGPRESETS).map(([k,v])=>`<button data-bg="${k}" aria-pressed="false"><svg viewBox="0 0 ${W} ${H}" class="fpv" aria-hidden="true">${v.svg}</svg><span>${v.name}</span></button>`).join('');
+$('#bgPresets').onclick=e=>{const b=e.target.closest('[data-bg]');if(b){setBg({kind:'preset',name:b.dataset.bg,opacity:S.bg?S.bg.opacity:0.6});$('#bgMsg').textContent=`${BGPRESETS[b.dataset.bg].name} applied. Drag devices into the rooms.`}};
+$('#bgBtn').onclick=()=>{syncBgForm();$('#bgMsg').textContent='';$('#bgModal').hidden=false};
+$('#bgClose').onclick=()=>$('#bgModal').hidden=true;$('#bgModal').onclick=e=>{if(e.target.id==='bgModal')$('#bgModal').hidden=true};
+$('#bgNone').onclick=()=>{setBg(null);$('#bgMsg').textContent='Background removed.'};
+$('#bgFile').onchange=e=>{loadBgFile(e.target.files[0]);e.target.value=''};
+$('#bgOp').oninput=e=>{if(S.bg){S.bg.opacity=+e.target.value/100;renderBg()}};$('#bgOp').onchange=()=>{if(S.bg)setBg(S.bg)};
+$('#bgFit').onchange=e=>{if(S.bg){S.bg.fit=e.target.value;setBg(S.bg)}};
+{const z=$('#bgDrop');z.ondragover=e=>{e.preventDefault();z.classList.add('over')};z.ondragleave=()=>z.classList.remove('over');z.ondrop=e=>{e.preventDefault();z.classList.remove('over');loadBgFile(e.dataTransfer.files[0])}}
+/* ---------- optional donation link (set in <meta name="packetyard:donate">) ---------- */
+(()=>{const m=document.querySelector('meta[name="packetyard:donate"]');let u=m?String(m.content||'').trim():'';
+  try{const x=new URL(u);const ok=x.protocol==='https:'&&/(^|\.)(buymeacoffee\.com|ko-fi\.com|github\.com|paypal\.me|paypal\.com|patreon\.com|liberapay\.com)$/i.test(x.hostname);u=ok?x.href:''}catch(e){u=''}
+  if(!u)return;document.querySelectorAll('[data-donate]').forEach(a=>{a.href=u;a.hidden=false});document.querySelectorAll('[data-donate-wrap]').forEach(w=>w.hidden=false);
+  const lbl=/ko-fi/i.test(u)?'☕ Support on Ko-fi':/github\.com\/sponsors/i.test(u)?'♥ Sponsor':/patreon/i.test(u)?'♥ Support on Patreon':/paypal/i.test(u)?'☕ Donate':'☕ Buy me a coffee';document.querySelectorAll('[data-donate]').forEach(a=>a.textContent=lbl)})();
 let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,3800)}
 
 /* ---------- topology builders ---------- */
@@ -4366,12 +4438,12 @@ function renderProjects(){const P=projList(),names=Object.keys(P).sort((a,b)=>(P
   $$('[data-pdel]').forEach(b=>b.onclick=()=>{if(b.dataset.armed){const P2=projList();delete P2[b.dataset.pdel];store.set(PKEY,JSON.stringify(P2));renderProjects()}else{b.dataset.armed='1';b.textContent='Confirm delete'}});
   $('#jsonBox').value=JSON.stringify(projData(),null,1)}
 function saveProject(){const n=$('#projName').value.trim().slice(0,40);if(!n)return toast('Give your project a name first.');const P=projList();P[n]={t:new Date().toISOString(),data:projData()};
-  store.set(PKEY,JSON.stringify(P));store.set('packetyard.current',n);if(!store.get(PKEY))toast('Your browser blocked storage here. Use Download file instead.');else toast(`Saved "${n}" in this browser.`);renderProjects()}
+  const ok=store.set(PKEY,JSON.stringify(P));store.set('packetyard.current',n);if(!ok||!store.get(PKEY))toast(S.bg&&S.bg.kind==='image'?'Not enough browser storage for this project with its background image. Use Download file instead.':'Your browser blocked storage here. Use Download file instead.');else toast(`Saved "${n}" in this browser.`);renderProjects()}
 async function downloadProject(){const n=($('#projName').value.trim()||'packetyard-lab').replace(/[^\w.-]+/g,'-');const text=JSON.stringify(projData(),null,1);
   let dl=null;try{dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null}catch(e){dl=null}
   if(dl){try{await dl.save({filename:n+'.json',data:text});toast(`Saved ${n}.json. Open it later with "Open a file".`)}catch(e){toast(e&&e.code==='declined'?'Download cancelled.':'Downloads are unavailable here. Copy the text below instead.')}return}
   try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'application/json'}));a.download=n+'.pkyard';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);toast(`Downloading ${n}.pkyard.`)}catch(e){toast('Downloads are blocked here. Copy the text below instead.')}}
-function readProjectFile(file){if(!file)return;if(file.size>8e6)return toast('That file is too large to be a Packetyard project (limit 8 MB).');const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(!o||!Array.isArray(o.devices))throw 0;openProject(o,file.name.replace(/\.(pkyard|json)$/i,''));$('#modal').hidden=true}catch(e){toast("That file isn't a Packetyard project.")}};r.readAsText(file)}
+function readProjectFile(file){if(!file)return;if(file.size>12e6)return toast('That file is too large to be a Packetyard project (limit 12 MB).');const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(!o||!Array.isArray(o.devices))throw 0;openProject(o,file.name.replace(/\.(pkyard|json)$/i,''));$('#modal').hidden=true}catch(e){toast("That file isn't a Packetyard project.")}};r.readAsText(file)}
 
 /* ---------- main loop ---------- */
 let last=performance.now(),panelTick=0,goalTick=0;

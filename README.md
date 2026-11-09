@@ -4,7 +4,7 @@ A network lab that runs in your browser. Build a topology, configure PCs, switch
 
 It's made for network training. Nothing to install and no server to run: open the page and start building.
 
-**Live demo:** https://YOUR-USERNAME.github.io/packetyard/
+**Live demo:** https://packetyard-lab.github.io/packetyard-lab/
 
 ---
 
@@ -12,6 +12,7 @@ It's made for network training. Nothing to install and no server to run: open th
 
 - **Start screen** with three learning paths (Beginner, Intermediate, Experienced real-world setups), plus Continue and Start from scratch. Turn it off with the checkbox; tap the Packetyard name to reopen it.
 - **Works on phones and tablets:** pinch to zoom, drag to pan, and a button to jump between the network and the device console.
+- **Canvas backgrounds:** upload your own floor plan, site map or photo (or pick a ready-made office, campus, data center, branch or home plan), set the opacity, and place devices where they really are. The image is saved with the project.
 - **Drag-and-drop topology** with 11 device types, each with a selectable make and model: PC, Laptop, Server, NAS, Proxy, Switch, Access point, Router, Firewall, SD-WAN edge and Internet/provider cloud.
 - **Real command line.** PCs and servers use Windows-style commands (`ipconfig`, `ping`, `tracert`, `nslookup`, `http`). Routers, firewalls and SD-WAN edges use an IOS-style CLI with modes.
 - **Ready-made scenarios:** a small company office, a medium enterprise with a DMZ, and HQ + branch over SD-WAN.
@@ -248,6 +249,18 @@ Then open http://localhost:8000 in your browser.
 - [x] IPv6 (SLAAC, Neighbor Discovery, ICMPv6, static routes, dual stack)
 - [x] Security hardening (Content-Security-Policy, safe project import)
 - [ ] OSPFv3 and DHCPv6
+
+## Support the project
+
+If Packetyard helps you learn, you can support it with a coffee. ☕
+
+To show a donation button in the app, open `index.html` and put your link in the line near the top:
+
+```html
+<meta name="packetyard:donate" content="https://buymeacoffee.com/YOUR-NAME">
+```
+
+Ko-fi, GitHub Sponsors, PayPal.me, Patreon and Liberapay links work too. Leave it empty to hide the button. This line is outside the app's script, so editing it does not require `update-csp.py`.
 
 ## Security
 
